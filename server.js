@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8100
  
 
 //config
-dotenv.config({path:'../back/config/config.env'})
+dotenv.config({path:'./config/config.env'})
 
 
 
@@ -29,7 +29,7 @@ cloudinary.config({
 })
 
 if (process.env.NODE_ENV == "production") {
-    app.use(express.static("froont/build"));
+    app.use(express.static("./froont/build"));
    
   }
   
@@ -39,9 +39,16 @@ const server = app.listen(PORT,()=>{
 })
 
 
-app.get('/',(req,res)=>{
-    res.send("HI")
-})
+app.get("*", function (_, res) {
+  res.sendFile(
+    path.join(__dirname, "./froont/public/index.html"),
+    function (err) {
+      if (err) {
+        res.status(500).send(err);
+      }
+    }
+  );
+});
 
 //Unhanlded Promise rejection  //error which has occured while i had written mongo instead of mongodb
 process.on("unhandledRejection",err=>{
